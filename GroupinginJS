@@ -108,6 +108,33 @@
  
                      }
  }
+count = count + 1;
+             }
+ 
+             last = group;
+ 
+             state.push({
+                 "lastgroup": group,
+                 "AnnualAmountFy": AnnualAmountFy,
+                 "GroupamountSum": GroupamountSum               
+ 
+             });
 }
 });
-}
+},
+ 
+                "paging": false,
+                "Select": true,
+ 
+                "lengthMenu": [[10, 25, 50, 100, 500, 1000], [10, 25, 50, 100, 500, 1000]],
+            });
+          
+        }
+ 
+    }
+ 
+    tblGroupAmountsforAccount.init();
+ 
+   
+ 
+});
