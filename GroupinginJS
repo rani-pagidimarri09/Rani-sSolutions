@@ -1,0 +1,113 @@
+\*How to do Grouping in JS Page and Do calculations on each group?*/
+
+  dts = $('#tblGroupAmountsforAccount').DataTable({
+      "searching": false,
+      "serverSide": false,
+      "processing": false,
+      "destroy": true,
+      "ordering": false,
+      "autowidth": true,
+      "info":false,
+      "dom": '<"top"flp<"clear">>rt<"bottom"ifp<"clear">>',
+      "ajax": {
+          "data": {  account: Account },
+          "url": "@Url.Action("GetGroupAmountsforAccount", "GroupAmounts")",
+          "contentType": 'application/json; charset=utf-8',
+          dataSrc: function (data) {
+              setLoader(false);
+              return data
+          },
+          "dataType": 'json',
+          "type": "GET",
+          error: function (xhr, error, thrown) {
+              document.getElementById("modalContent").innerHTML = "Error while retrieving information from server";
+              modal.style.display = "block";
+            
+          }
+      },
+ 
+      "columns": [
+          { "title": "Type", "data": "Type", "visible": false },
+          {
+              "title": "Groupid", "data": "Groupid", "visible": false
+          },
+         
+ 
+          {
+              "title": "RequestedAmountforFY", "data": "RequestedAmountforFY", "render": function (data, type, full, meta) {
+ 
+ 
+                  return '<input type=text  class="form-control table-input text-right " style="width: 40px;" readonly name=RequestedAmountforFY id=RequestedAmountforFY maxlength="1" size="1" value=' + full.RequestedAmountforFY + '>';
+              }
+          },         
+         
+          
+         
+          {
+              "title": "AnnualAmountFy", "data": "AnnualAmountFy", "render": function (data, type, full, meta) {
+ 
+ 
+                  return '<input type=text class="form-control table-input text-right " style="width: 80px;"   readonly name=AnnualAmountFy id=AnnualAmountFy maxlength="6" size="6" value=' + full.AnnualAmountFy + '>';
+              }
+          },
+ 
+
+ 
+     
+    
+ 
+      ],
+
+"drawCallback": function (settings) {
+ 
+     var api = this.api();
+     var rows = api.rows({ page: 'current' }).nodes();
+ 
+     let state = [{
+         lastgroup: [],
+         GroupamountSum: [],
+         
+         RequestedAmountforFY: [],
+         AnnualAmountFy: []      
+ 
+ 
+     }];
+     var lastgroup = null;
+     
+     var GroupamountSum = 0;
+     var RequestedAmountforFY = 0;     
+     var AnnualAmountFy = 0;
+     count = 1;   
+ 
+ 
+     api.column(Groupcolumn, { page: 'current' }).data().each(function (group, i) {
+ 
+ 
+         if (last !== group) {
+ 
+             GroupamountSum = 0;
+             RequestedAmountforFY = 0;
+             AnnualAmountFy = 0;            
+ 
+             Grouptotamount = document.getElementById(group).value;
+ 
+             api.rows().data().each(function (item) {
+ 
+ 
+                 if (item.GroupName == group) {
+ 
+ 
+                     GroupamountSum = eval(Grouptotamount * Lpctw);
+ 
+                     if (Grouptotamount == 0) {
+                         AnnualAmountFy = eval(AnnualAmountFy + Math.round(item.AnnualAmount));
+ 
+                     }
+                     else {
+                           AnnualAmountFy = eval(AnnualAmountFy + Math.round(item.AnnualAmount));
+ 
+                     }
+ }
+}
+});
+}
