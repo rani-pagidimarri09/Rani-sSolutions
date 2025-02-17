@@ -1,0 +1,14 @@
+   ViewBag.GroupedList = Model.GroupModelList
+                                       .Where(x => x.grpuname != "Check")
+                                       .GroupBy(x => x.GroupType)
+                                       .Select(g => new GroupedResult
+                                       {
+                                           GroupType = g.GroupType,
+                                           Items = g.ToList(),
+                                           TotalAmounts = g.Sum(x => -Convert.ToDecimal(x.Amount ?? 0) ),
+                                           
+                 ? 1 - ((g.Sum(x => x.Amount ?? 0) + g.Sum(x => x.YTDEnc ?? 0))
+                        / g.Sum(x => Convert.ToDecimal(x.groupAmount ?? 0))) * 100
+                 : 0
+                                       })
+                                       .ToList();
